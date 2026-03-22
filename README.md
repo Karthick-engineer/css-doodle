@@ -23,22 +23,18 @@ It facilitates the creation of graphic patterns, visual backgrounds, handcrafted
 
 ## New Features
 ### @flow
-The `@flow` function generates flow field 2D vectors (`vx vy`) based on 2D Perlin noise. This is extremely useful for generating organic-looking curved paths or directional distributions over your grid. You can parse the vector components using `@n()` and `@ny()`.
+The `@flow` function generates flow field angles based on 2D Perlin noise. This is extremely useful for generating organic-looking curved paths or directional distributions over your grid.
 
 **Parameters:**
-- `from`, `to` - Defines the range of the internal noise calculation. Defaults to `0` and `360` (deg).
+- `from`, `to` - Defines the output range. Defaults to `0` and `360` (deg).
 - `scale` - Controls amplitude mapping (default `1`).
 - `frequency` - Specifies the frequency of the noise field (default `1`).
 - `octave` - Adds detail layers (default `1`).
-- `sharp` - Automatically snaps internal angles into fixed increments before resolving the vector (e.g. `sharp=4` creates `90` degree rigid turns like Fidenza style).
+- `sharp` - Automatically snaps angles into fixed increments (e.g. `sharp=4` snaps to `90` degree rigid turns).
 
 **Example:**
 ```css
---f: @flow(scale=2, sharp=8);
-transform: translate(
-  calc(50px * @n(var(--f))),
-  calc(50px * @ny(var(--f)))
-);
+transform: rotate(@flow(scale=2, sharp=8));
 ```
 
 ### @collide

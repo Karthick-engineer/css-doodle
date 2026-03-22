@@ -2,7 +2,6 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>CSS Doodle @flow Test</title>
   <script src="../css-doodle.min.js"></script>
   <style>
     body { margin: 0; background: #222538; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden;}
@@ -11,24 +10,19 @@
 <body>
   <css-doodle>
     :doodle {
-      @grid: 60x50 / 600px 720px;
+      @grid: 80x80 / 600px 720px;
     }
 
     @size: 80% 30%;
 
-    /* Random colors from a palette */
     background: @p(#f75f68, #fed163, #437190, #5da0a4, #f4e8d3, #fff, #b74f4b, #2b394f, #222538);
 
-    /* Using @flow to get a 2D vector for directional translation simulating a flow field */
-    --f: @flow(scale=2, frequency=1.5, sharp=0);
-    transform: translate(calc(50px * @n(var(--f))), calc(50px * @ny(var(--f))));
+    transform: rotate(@flow(scale=2, frequency=1.5, sharp=0));
 
-    /* Create dashes effect */
     border-radius: 20px;
     margin: 1px;
     opacity: @r(0.6, 1);
 
-    /* Randomly vary lengths somewhat */
     width: @r(30%, 150%);
   </css-doodle>
 </body>

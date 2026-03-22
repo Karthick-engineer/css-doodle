@@ -558,18 +558,8 @@ const Expose = add_alias({
         angle = Math.round(angle / increment) * increment;
       }
 
-      let rad = angle;
-      if (!unit || unit === 'deg') {
-        rad = angle * (Math.PI / 180);
-      } else if (unit === 'turn') {
-        rad = angle * (Math.PI * 2);
-      }
-
-      let vx = Math.cos(rad);
-      let vy = Math.sin(rad);
-
-      // Return vector component to be used inside e.g., translate(calc(x * ...), calc(y * ...))
-      return push_stack(context, 'last_rand', `${vx} ${vy}`);
+      if (!unit) unit = 'deg';
+      return push_stack(context, 'last_rand', angle + unit);
     };
   },
 
