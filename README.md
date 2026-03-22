@@ -21,6 +21,47 @@ It facilitates the creation of graphic patterns, visual backgrounds, handcrafted
 </css-doodle>
 ```
 
+## New Features
+### @flow
+The `@flow` function generates flow field angles based on 2D Perlin noise. This is extremely useful for generating organic-looking curved paths or directional distributions over your grid.
+
+**Parameters:**
+- `from`, `to` - Defines the range of output rotation. Defaults to `0` and `360` (deg).
+- `scale` - Controls amplitude mapping (default `1`).
+- `frequency` - Specifies the frequency of the noise field (default `1`).
+- `octave` - Adds detail layers (default `1`).
+- `sharp` - Automatically snaps rotation angles into fixed increments (e.g. `sharp: 4` creates `90` degree rigid turns like Fidenza style).
+
+**Example:**
+```css
+transform: rotate(@flow(scale: 2, sharp: 8));
+```
+
+### @collide
+The `@collide` function tracks generated shapes spatially and checks whether the current shape would overlap with previously placed shapes within the current doodle context. This enables tight, non-overlapping packing patterns.
+
+**Parameters:**
+- `x`, `y` - Defines the spatial position to check against.
+- `radius` - Defines the bounding radius of the current element.
+- `allow` - If set to `1` it will still track the element even if it overlaps (defaults to `0`).
+
+**Example:**
+```css
+--x: @r(0, 800)px;
+--y: @r(0, 400)px;
+--radius: 50px;
+
+@match(
+  @collide(x: var(--x), y: var(--y), radius: var(--radius)),
+  (
+    display: none; /* Hide if collided */
+  ),
+  (
+    display: block; /* Draw if clear */
+  )
+)
+```
+
 ## Docs
 [https://css-doodle.com](http://css-doodle.com)
 

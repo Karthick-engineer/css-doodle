@@ -502,6 +502,95 @@ const Expose = add_alias({
     };
   },
 
+  flow({ x, y, context, position, grid, extra, random }) {
+    let counter = 'noise-flow' + position;
+    let counterX = counter + 'offset-x';
+    let counterY = counter + 'offset-y';
+    let [ni, nx, ny, nm, NX, NY] = last(extra) || [];
+    let isSeqContext = (ni && nm);
+    return (...args) => {
+      let {from = 0, to = 360, frequency = 1, scale = 1, octave = 1, sharp = 0} = get_named_arguments(args, [
+        'from', 'to', 'frequency', 'scale', 'octave', 'sharp'
+      ]);
+
+      frequency = clamp(frequency, 0, Infinity);
+      scale = clamp(scale, 0, Infinity);
+      octave = clamp(octave, 1, 100);
+
+      if (args.length == 1) [from, to] = [0, args[0]];
+      if (!context[counter]) context[counter] = new Noise(random);
+      if (!context[counterX]) context[counterX] = random();
+      if (!context[counterY]) context[counterY] = random();
+
+      let noise2d = context[counter];
+      let offsetX = context[counterX];
+      let offsetY = context[counterY];
+      let _x = (isSeqContext ? ((nx - 1) / NX) : ((x - 1) / grid.x)) + offsetX;
+      let _y = (isSeqContext ? ((ny - 1) / NY) : ((y - 1) / grid.y)) + offsetY;
+
+      if (NX <= 1 || grid.x <= 1) _x = offsetX + 0.5;
+      if (NY <= 1 || grid.y <= 1) _y = offsetY + 0.5;
+
+      if (_x == 0 && _y == 0) {
+        _x = offsetX;
+        _y = offsetY;
+      }
+
+      let t = noise2d.noise(_x * frequency, _y * frequency, 0) * scale;
+      for (let i = 1; i < octave; ++i) {
+        let i2 = i * 2;
+        t += noise2d.noise(_x * frequency * i2, _y * frequency * i2, 0) * (scale / i2);
+      }
+
+      let transform = (is_letter(from) && is_letter(to)) ? by_charcode : by_unit;
+      let fn = transform((from, to) => map2d(t, from, to, scale));
+      let value = fn(from, to);
+      let angle = parseFloat(value) || 0;
+      let unit = String(value).replace(/[0-9.-]/g, '');
+      if (!unit) unit = 'deg';
+
+      if (sharp) {
+        let increment = 360 / sharp;
+        angle = Math.round(angle / increment) * increment;
+      }
+
+      return push_stack(context, 'last_rand', angle + unit);
+    };
+  },
+
+  collide({ context, position }) {
+    let key = 'collision-data-' + position;
+    return (...args) => {
+      let { x, y, radius, allow = 0 } = get_named_arguments(args, ['x', 'y', 'radius', 'allow']);
+      if (!context[key]) {
+        context[key] = [];
+      }
+
+      let px = parseFloat(x) || 0;
+      let py = parseFloat(y) || 0;
+      let pr = parseFloat(radius) || 0;
+
+      if (!pr) return 0; // no radius, no collision
+
+      let collided = false;
+      for (let item of context[key]) {
+        let dx = px - item.x;
+        let dy = py - item.y;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < pr + item.radius) {
+          collided = true;
+          break;
+        }
+      }
+
+      if (parseInt(allow) || !collided) {
+        context[key].push({ x: px, y: py, radius: pr });
+      }
+
+      return collided ? 1 : 0;
+    };
+  },
+
   stripe() {
     return (...input) => {
       let colors = input.map(get_value).flat();
