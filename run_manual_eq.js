@@ -9,11 +9,11 @@ const __dirname = path.dirname(__filename);
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  const file = 'test_flow.html';
+  const file = 'test_flow_eq.html';
   const filePath = `file://${path.resolve(__dirname, file)}`;
   console.log(`Rendering ${filePath}...`);
   await page.goto(filePath);
   await page.waitForTimeout(2000);
-  await page.screenshot({ path: 'test_flow_colon.png' });
+  await page.screenshot({ path: 'test_flow_eq.png' });
   await browser.close();
 })();
