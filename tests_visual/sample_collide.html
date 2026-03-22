@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>CSS Doodle @collide Test</title>
+  <script src="../css-doodle.min.js"></script>
+  <style>
+    body { margin: 0; background: #f35b43; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden;}
+  </style>
+</head>
+<body>
+  <css-doodle>
+    :doodle {
+      @grid: 20x20 / 800px 400px;
+      /* Avoid default grid cell alignment to scatter them */
+      position: relative;
+    }
+
+    /* Generate a random center position */
+    --x: @r(0, 800)px;
+    --y: @r(0, 400)px;
+    /* Generate random size */
+    --size: @r(20, 100)px;
+    /* Calculate a rough bounding radius (e.g., half the size plus some padding) */
+    --radius: calc(var(--size) / 1.5);
+
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--size);
+    height: var(--size);
+
+    @match(
+      @collide(x=var(--x), y=var(--y), radius=var(--radius)),
+      (
+        /* If there's a collision, hide the shape */
+        display: none;
+      ),
+      (
+        /* Otherwise, draw the shape */
+        display: block;
+
+        background: @p(#fad7de, #fedbd3, #fec7c8, transparent, transparent);
+        border: @p(none, 4px solid @p(#fad7de, #fedbd3, #fec7c8));
+        border-radius: @p(10%, 50%, 50% 50% 0 0, 0 50% 50% 0);
+        transform: rotate(@p(0, 45deg, 90deg, 180deg));
+
+        /* Occasional special shapes using pseudo-elements */
+        @match(
+          @p(0, 1, 2, 3),
+          0, (
+             background: transparent;
+             border: 4px solid #fad7de;
+             border-radius: 50%;
+          )
+        );
+      )
+    )
+
+  </css-doodle>
+</body>
+</html>

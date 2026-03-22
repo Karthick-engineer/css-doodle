@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>CSS Doodle Flow + Collide Test</title>
+  <script src="../css-doodle.min.js"></script>
+  <style>
+    body { margin: 0; background: #eee; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; gap: 20px;}
+  </style>
+</head>
+<body>
+  <css-doodle>
+    :doodle {
+      @grid: 10x10 / 200px;
+    }
+    @size: 100%;
+
+    --x: calc(100% * (@x - 1));
+    --y: calc(100% * (@y - 1));
+    --rad: 10px;
+
+    /* Combine flow and collide: only place elements if they fit, rotate by flow */
+    @match(
+      @collide(x=var(--x), y=var(--y), radius=var(--rad)),
+      ( display: none; ),
+      (
+        background: @p(#f00, #0f0, #00f, #ff0);
+        --f: @flow(scale=5, sharp=8);
+        transform: translate(calc(20px * @n(var(--f))), calc(20px * @ny(var(--f))));
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      )
+    )
+  </css-doodle>
+</body>
+</html>
