@@ -21,11 +21,11 @@
 
     /* Combine flow and collide: only place elements if they fit, rotate by flow */
     @match(
-      @collide(x: var(--x), y: var(--y), radius: var(--rad)),
+      @collide(x=var(--x), y=var(--y), radius=var(--rad)),
       ( display: none; ),
       (
         background: @p(#f00, #0f0, #00f, #ff0);
-        transform: rotate(@flow(scale: 5, sharp: 8));
+        transform: rotate(@flow(scale=5, sharp=8));
         clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
       )
     )

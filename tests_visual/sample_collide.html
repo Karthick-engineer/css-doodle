@@ -31,7 +31,7 @@
     height: var(--size);
 
     @match(
-      @collide(x: var(--x), y: var(--y), radius: var(--radius)),
+      @collide(x=var(--x), y=var(--y), radius=var(--radius)),
       (
         /* If there's a collision, hide the shape */
         display: none;

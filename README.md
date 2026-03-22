@@ -34,7 +34,7 @@ The `@flow` function generates flow field angles based on 2D Perlin noise. This 
 
 **Example:**
 ```css
-transform: rotate(@flow(scale: 2, sharp: 8));
+transform: rotate(@flow(scale=2, sharp=8));
 ```
 
 ### @collide
@@ -52,7 +52,7 @@ The `@collide` function tracks generated shapes spatially and checks whether the
 --radius: 50px;
 
 @match(
-  @collide(x: var(--x), y: var(--y), radius: var(--radius)),
+  @collide(x=var(--x), y=var(--y), radius=var(--radius)),
   (
     display: none; /* Hide if collided */
   ),
