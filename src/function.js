@@ -547,14 +547,29 @@ const Expose = add_alias({
       let value = fn(from, to);
       let angle = parseFloat(value) || 0;
       let unit = String(value).replace(/[0-9.-]/g, '');
-      if (!unit) unit = 'deg';
 
       if (sharp) {
         let increment = 360 / sharp;
+        if (unit === 'rad') {
+          increment = (Math.PI * 2) / sharp;
+        } else if (unit === 'turn') {
+          increment = 1 / sharp;
+        }
         angle = Math.round(angle / increment) * increment;
       }
 
-      return push_stack(context, 'last_rand', angle + unit);
+      let rad = angle;
+      if (!unit || unit === 'deg') {
+        rad = angle * (Math.PI / 180);
+      } else if (unit === 'turn') {
+        rad = angle * (Math.PI * 2);
+      }
+
+      let vx = Math.cos(rad);
+      let vy = Math.sin(rad);
+
+      // Return vector component to be used inside e.g., translate(calc(x * ...), calc(y * ...))
+      return push_stack(context, 'last_rand', `${vx} ${vy}`);
     };
   },
 

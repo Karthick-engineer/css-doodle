@@ -25,7 +25,8 @@
       ( display: none; ),
       (
         background: @p(#f00, #0f0, #00f, #ff0);
-        transform: rotate(@flow(scale=5, sharp=8));
+        --f: @flow(scale=5, sharp=8);
+        transform: translate(calc(20px * @n(var(--f))), calc(20px * @ny(var(--f))));
         clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
       )
     )

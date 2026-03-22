@@ -19,8 +19,9 @@
     /* Random colors from a palette */
     background: @p(#f75f68, #fed163, #437190, #5da0a4, #f4e8d3, #fff, #b74f4b, #2b394f, #222538);
 
-    /* Using @flow to determine rotation and simulating a flow field */
-    transform: rotate(@flow(scale=2, frequency=1.5, sharp=0)) translateX(20%);
+    /* Using @flow to get a 2D vector for directional translation simulating a flow field */
+    --f: @flow(scale=2, frequency=1.5, sharp=0);
+    transform: translate(calc(50px * @n(var(--f))), calc(50px * @ny(var(--f))));
 
     /* Create dashes effect */
     border-radius: 20px;
